@@ -26,6 +26,12 @@ Worked with classmate mishig on Alpha Beta Pruning algorithm
 Note: Have a sweet test bot that is different then greedy.
 ```
 
+### Cancer Neural Network:
+```py
+Status: Working 
+A back propagation Neural network for learning to diagnose cancer.
+```
+
 ### Sliding Puzzles:
 ```py
 Status: Working 
