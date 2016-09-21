@@ -1,0 +1,137 @@
+<html>
+
+<head>
+  <title>
+    CP365 - Intelligent Agents
+  </title>
+
+<link rel="stylesheet" type="text/css" href="../../style.css" />
+
+</head>
+
+<body>
+<div id="mainbody">
+
+
+
+<center><p><h3>CP365 - Assignment #1: Intelligent Agents</h3></p></center>
+
+
+<p><b>Assignment Overview</b></p>
+
+<img src="mario.jpg" class="floatRight" width="240" height="240" title="The KING of video games.">
+
+<p>For today's assignment you need to create an intelligent Mario character that plays the Infinite Mario game.  Mario's goal is to make it as far into the randomly-generated world as fast as possible.  Your job will be to give Mario intelligence by implementing some heuristics of your choosing.  In the past there has been a <a href="http://www.marioai.org/">Mario AI Competition</a> to test game bots.
+
+<br><br>
+
+<p><b>Getting Set Up</b></p>
+
+<p>Install Infinite Mario and the Mario development environment in the following way:
+
+<ol>
+
+<li><a href="MarioAI.zip">Download</a> and extract the source code into a MarioAI directory.
+
+<li>Try manually playing the game for "testing" purposes:
+<div class="code">
+<pre>
+$ cd bin
+$ java -classpath ../lib/jdom.jar:. ch.idsia.scenarios.Main
+
+Use the arrow keys to control Mario along with the 'A' (Run/Shoot Fireball) and 'S' (Jump) keys.
+(Don't play too long...you have work to do!)
+</pre>
+</div>
+<li>Check out the code in src/ch/idsia/agents/controllers/MyAgent.java.  This is the file you will work with to create your intelligent Mario.  Currently this version of Mario just runs to the right and jumps when possible.  It doesn't do anything smart...yet.  Compile and run the Mario agent like this:
+<div class="code">
+<pre>
+$ cd src
+$ javac -d ../bin -classpath ../lib/jdom.jar:../lib/junit-4.8.2.jar:. ch/idsia/agents/controllers/MyAgent.java
+$ cd ../bin
+$ java -classpath ../lib/jdom.jar:. ch.idsia.scenarios.Main -ag ch.idsia.agents.controllers.MyAgent
+</pre>
+</div>
+
+<li>OK, now you're ready to get going.
+
+</ol>
+
+
+<p><b>The Environment and Making Decisions</b></p>
+
+<p>To make Mario more intelligent, he will need to make decisions based the the current state of the environment around him.  For example, if there is an enemy to his right, then jumping over it would be a good idea.
+
+<p><i>How does Mario know about the environment?</i>  Each <i>tick</i> of the game, Mario is given a multi-dimensional array that describes the environment around him.  The array is 19x19 and is always relative to Mario's current position...that is Mario is always in position (9,9).  Here's a visual using a smaller size grid from <a href="http://julian.togelius.com/Togelius2010The.pdf"> a paper by the competition organizers</a>: 
+
+<p><center><img src="environment.png" title="Togelius, Karakovskiy, and Baumgarten: http://julian.togelius.com/Togelius2010The.pdf"></center><br><br>
+
+
+<p>Mario can "see" what's around him by checking other blocks using <i>hasEnemy</i> or <i>isEmpty</i>.
+
+<div class="code">
+<pre>
+if (isEmpty(9, 10)) {
+    System.out.println("Square to the right of Mario is empty (no barriers, no enemies)");
+}
+
+if (hasEnemy(3, 15)) {
+    System.out.println("There is an enemy up and to the right of Mario.");
+}
+</pre>
+</div>
+
+
+<p><i>How does Mario perform actions?</i>  Each <i>tick</i> of the game, Mario has to make a decision about what to do next.  This decision may be the combination of several controller actions (e.g. Mario can be moving right and jumping at the same time).  To make Mario perform actions, you need to modify the <i>getAction()</i> method.  
+
+<p>Mario has an array of booleans called <i>action</i> that determines what he will do next.  Your job is to set certain positions in the array to <b>true</b> if you want Mario to perform the action associated with that array position.  You can (and should) use constants to refer to the different array positions.  For example:
+
+<div class="code">
+<pre>
+  // Make Mario run to the right.
+  action[Mario.KEY_RIGHT] = true;
+
+  // Make Mario jump if possible.
+  action[Mario.KEY_JUMP] = isMarioAbleToJump || !isMarioOnGround;
+
+  // Make Mario hold down the speed/fireball button.
+  action[Mario.KEY_SPEED] = true;
+</pre>
+</div>
+
+<p>Once you have set all the desired actions to true, then you just return the action array and Mario should do your bidding!
+
+
+<p><b>Possible Heuristics</b></p>
+
+<p><i>How can you make Mario smarter?</i>  Try implementing some simple rules-based heuristics.  Here are some possibilities:
+
+<div class="code">
+<pre>
+
+ - If there is an enemy to your right, jump and move right over it.
+ - If there is an enemy above you, run right or left (maybe left is safer?)
+ - If there is an enemy directly below you, don't do anything so you fall down and stomp it.
+ - If no enemies are detected, run to the right.
+ - If you detect a pit, jump over it.
+</pre>
+</div>
+
+<br><br>
+
+
+<p><b>Things to consider:</b></p>
+
+<ul>
+<li>Is your Mario agent any good? Can it complete the level?  Is it better than a human player? 
+<li>Does your agent play like a human?  If you recorded a movie of it playing, would other people know a real person wasn't controlling Mario?  Why or why not?   
+<li>What would your agent need to know to be more successful?  What is currently holding it back from being a great Mario player?
+</ul>
+
+<br><br>
+
+
+
+
+</body>
+</html>
